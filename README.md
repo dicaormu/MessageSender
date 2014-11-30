@@ -63,6 +63,14 @@ $ karma start
  - Add Code Comments
  - Add Night Mode
 
+### How to run it?
+
+```sh
+$ ./sbt
+> container:start
+```
+
+
 License
 ----
 
