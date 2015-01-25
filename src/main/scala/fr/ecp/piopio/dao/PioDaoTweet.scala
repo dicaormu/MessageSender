@@ -169,8 +169,8 @@ case class PioDaoFollowers(handleFrom: String, handleTo: String) extends Neo4jWr
 
   def getFollowings(): util.ArrayList[UserC] = {
     val user = PioDaoFindUser(handleFrom.toString).findUserByHandle()
-    val listFolowers = user.getRelationships(DynamicRelationshipType.withName("Follows")).asScala.map(_.getOtherNode(user))
-
+    //val listFolowers = user.getRelationships(DynamicRelationshipType.withName("Follows")).asScala.map(_.getOtherNode(user))
+    val listFolowers = user.getRelationships(Direction.OUTGOING,DynamicRelationshipType.withName("Follows")).asScala.map(_.getOtherNode(user))
     val followsList = new util.ArrayList[UserC]
     for (element <- listFolowers) followsList.add(new UserC(new Integer(element.getProperty("id").toString), element.getProperty("user").toString, element.getProperty("image").toString))
 
@@ -187,9 +187,19 @@ case class PioDaoFollowers(handleFrom: String, handleTo: String) extends Neo4jWr
     val followsList = new util.ArrayList[UserC]
     for (element <- nodes) {
       if (element.getProperty("__CLASS__").equals("fr.ecp.piopio.dao.UserC")) {
+
         //println("la propiedad es")
-        if (element.hasProperty("id"))
-          followsList.add(new UserC(Math.abs(new Integer(element.getProperty("id").toString)), element.getProperty("user").toString, element.getProperty("image").toString))
+          if (element.hasProperty("id")) {
+            if (!element.getProperty("id").toString.equals(handleFrom.toString)) {
+              val rels=element.getRelationships(Direction.INCOMING,DynamicRelationshipType.withName("Follows")).asScala
+              //rels.view.map(v=>)
+              val del=rels.find(v=>v.getStartNode.getProperty("id").toString().equals(handleFrom.toString))
+              println(del)
+              //val del=rels.takeWhile(_.getStartNode.getProperty("id").toString().equals(handleFrom.toString))
+              if(del.size ==0)
+                followsList.add(new UserC(Math.abs(new Integer(element.getProperty("id").toString)), element.getProperty("user").toString, element.getProperty("image").toString))
+            }
+          }
       }
     }
 
@@ -203,9 +213,17 @@ case class PioDaoFollowers(handleFrom: String, handleTo: String) extends Neo4jWr
     val nodeMap = withTx {
       implicit us =>
         val user = PioDaoFindUser(handleFrom.toString).findUserByHandle()
-        val rels = user.getRelationships(DynamicRelationshipType.withName("Follows")).asScala
-        val del = rels.takeWhile(_.getEndNode.getProperty("id").toString.equals(handleTo.toString)).foreach(_.delete())
 
+        val rels = user.getRelationships(Direction.OUTGOING,DynamicRelationshipType.withName("Follows")).asScala
+
+        for(element<-rels){
+          if(element.getEndNode.getProperty("id").toString.equals(handleTo.toString))
+            element.delete()
+        }
+        //val del = rels.takeWhile(_.getEndNode.getProperty("id").toString().equals(handleTo.toString)).foreach(_.delete())
+          //.equals(handleTo.toString))
+        //println(del)
+        //del.foreach(_.delete())
     }
   }
 

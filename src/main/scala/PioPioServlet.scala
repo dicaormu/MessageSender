@@ -114,11 +114,12 @@ class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
   /**
    *
    */
-  get("/users") {
+  get("/:handle/users") {
     contentType = formats("json")
     try {
+      val handle = params("handle")
+      val resp = new PioDaoFollowers(handle, null).getUserList()
 
-      val resp = new PioDaoFollowers(null, null).getUserList()
       UserData.addAll(resp.toList)
 
       UserData.all
