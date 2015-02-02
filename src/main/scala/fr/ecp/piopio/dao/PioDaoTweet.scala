@@ -38,6 +38,9 @@ case class PioPio(date: Date, pio: String) extends PioPioBase
 
 case class UserC(id: Int, user: String, image: String) extends UserBase
 
+object Resources {
+  val BASE_URL = "http://172.31.38.63:7474/db/data/"
+}
 
 class PioDaoTweet(handle: Int, pio: String) extends Neo4jWrapper with RestGraphDatabaseServiceProvider with TypedTraverser with Neo4jWrapperImplicits {
 
@@ -83,11 +86,11 @@ class PioDaoTweet(handle: Int, pio: String) extends Neo4jWrapper with RestGraphD
 
   }
 
-  override def uri: URI = new URI("http://192.168.56.101:7474/db/data/")
+  override def uri: URI = new URI(Resources.BASE_URL)
 }
 
 case class PioDaoFindUser(handle: String) extends Neo4jWrapper with RestGraphDatabaseServiceProvider with TypedTraverser with Cypher {
-  override def uri: URI = new URI("http://192.168.56.101:7474/db/data/")
+  override def uri: URI = new URI(Resources.BASE_URL)
 
   ShutdownHookThread {
     shutdown(ds)
@@ -119,7 +122,7 @@ case class PioDaoFindUser(handle: String) extends Neo4jWrapper with RestGraphDat
 }
 
 class PioDaoCreateUser(id: Int, handle: String, image: String) extends Neo4jWrapper with RestGraphDatabaseServiceProvider with TypedTraverser {
-  override def uri: URI = new URI("http://192.168.56.101:7474/db/data/")
+  override def uri: URI = new URI(Resources.BASE_URL)
 
   ShutdownHookThread {
     shutdown(ds)
@@ -136,7 +139,7 @@ class PioDaoCreateUser(id: Int, handle: String, image: String) extends Neo4jWrap
 
 
 case class PioDaoFollowers(handleFrom: String, handleTo: String) extends Neo4jWrapper with RestGraphDatabaseServiceProvider with TypedTraverser with Cypher {
-  override def uri: URI = new URI("http://192.168.56.101:7474/db/data/")
+  override def uri: URI = new URI(Resources.BASE_URL)
 
   ShutdownHookThread {
     shutdown(ds)
