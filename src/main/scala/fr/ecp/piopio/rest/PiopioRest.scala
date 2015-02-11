@@ -14,7 +14,7 @@ import org.scalatra.servlet.ScalatraListener
 object PiopioRest  {
 
   def main(args: Array[String]) {
-    val socketAddress = new InetSocketAddress(8080)
+    val socketAddress = new InetSocketAddress(new Integer(args(0)))
     val server = new Server(socketAddress)
     val context = new WebAppContext()
     context.setContextPath("/")
