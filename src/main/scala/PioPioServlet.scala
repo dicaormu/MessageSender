@@ -1,5 +1,6 @@
 import java.util
 import java.util.NoSuchElementException
+import org.scalatra.swagger._
 
 import fr.ecp.piopio.dao._
 //import org.json4s.jackson.Json
@@ -8,19 +9,33 @@ import org.scalatra._
 import org.json4s.{DefaultFormats, Formats}
 import org.scalatra.json._
 import scala.collection.JavaConversions._
+import org.scalatra.json._
 
 
 
+class PioPioServlet(implicit val swagger: Swagger) extends ScalatraServlet
+with JacksonJsonSupport with SwaggerSupport{
 
-class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
+  override protected val applicationName = Some("PioPio")
+  protected val applicationDescription = "The PioPio Message Federator. This application exposes operation " +
+    "for sending messages (Pios or Tweets) as a tweeter-like application."
 
   protected implicit val jsonFormats: Formats = DefaultFormats
-
 
   /**
    * Create user
    */
-  post("/users") {
+
+  val postUser =
+    (apiOperation[List[UserC]]("postUser")
+      summary "Creates an user in the application "
+      notes "Creates a new user of the application. Return the user created "
+      parameters (
+        pathParam[String]("image").description("url of the profile image selected for the user")
+
+      ))
+
+  post("/users",operation(postUser)) {
     contentType = formats("json")
     val parseado = parse(request.body)
     val usuario = (parseado \ "user").values
@@ -39,10 +54,16 @@ class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
 
   }
 
+
+  val getTweets =
+    (apiOperation[List[UserC]]("getTweets")
+      summary "Show all Pios of an user"
+      notes "Shows all the Pios (tweets) of an user. "
+      parameter queryParam[Option[String]]("handle").description("the handle of te user to find the Pios"))
   /**
    * :handle tweets
    */
-  get("/:handle/tweets") {
+  get("/:handle/tweets",operation(getTweets)) {
     contentType = formats("json")
     try {
       val handle = params("handle")
@@ -63,10 +84,15 @@ class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
     }
   }
 
+  val postTweet =
+    (apiOperation[String]("postTweet")
+      summary "Post a Pio (tweet)"
+      notes "Post a Pio for the user with the handle in :handle"
+      parameter queryParam[Option[String]]("handle").description("handle of the user"))
   /**
    * Add tweet
    */
-  post("/:handle/tweets") {
+  post("/:handle/tweets",operation(postTweet)) {
     contentType = formats("json")
     try {
       val handle = params("handle")
@@ -88,10 +114,14 @@ class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
     }
   }
 
-  /**
-   *
-   */
-  get("/:handle/followers") {
+
+  val getFollowers =
+    (apiOperation[List[UserC]]("getFollowers")
+      summary "Show all followers of an user"
+      notes "Shows all the follower of an user. "
+      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+
+  get("/:handle/followers",operation(getFollowers)) {
     contentType = formats("json")
     try {
       val handle = params("handle")
@@ -111,13 +141,20 @@ class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
     }
   }
 
-  /**
-   *
-   */
-  get("/:handle/users") {
+  //////////////////////////
+  val getUsers =
+    (apiOperation[List[UserC]]("getFollowers")
+      summary "Show all followers of an user"
+      notes "Shows all the follower of an user. "
+      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+
+  get("/:handle/users",operation(getUsers)) {
     contentType = formats("json")
     try {
+
       val handle = params("handle")
+      val paramTest = params("ipUser")
+      println(s"invoque el servicio $paramTest")
       val resp = new PioDaoFollowers(handle, null).getUserList()
 
       UserData.addAll(resp.toList)
@@ -133,10 +170,14 @@ class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
     }
   }
 
-  /**
-   *
-   */
-  get("/:handle/followings") {
+
+  val getFollowings =
+    (apiOperation[List[UserC]]("getFollowers")
+      summary "Show all followers of an user"
+      notes "Shows all the follower of an user. "
+      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+
+  get("/:handle/followings",operation(getFollowings)) {
     contentType = formats("json")
     try {
       val handle = params("handle")
@@ -156,7 +197,13 @@ class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
   /**
    * Follow someone
    */
-  post("/:handle/followings") {
+  val follow =
+    (apiOperation[List[UserC]]("getFollowers")
+      summary "Show all followers of an user"
+      notes "Shows all the follower of an user. "
+      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+
+  post("/:handle/followings",operation(follow)) {
     contentType = formats("json")
     try {
       val handleFrom = params("handle")
@@ -171,10 +218,17 @@ class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
     }
   }
 
+
   /**
    * Stop following someone
    */
-  delete("/:handleFrom/followings/:handleTo") {
+  val stopFollowing =
+    (apiOperation[List[UserC]]("getFollowers")
+      summary "Show all followers of an user"
+      notes "Shows all the follower of an user. "
+      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+
+  delete("/:handleFrom/followings/:handleTo",operation(stopFollowing)) {
     contentType = formats("json")
     try {
       val handleFrom = params("handleFrom")
@@ -191,7 +245,13 @@ class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
   /**
    * Signin user
    */
-  post("/sessions") {
+  val signin =
+    (apiOperation[List[UserC]]("getFollowers")
+      summary "Show all followers of an user"
+      notes "Shows all the follower of an user. "
+      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+
+  post("/sessions",operation(signin)) {
     contentType = formats("json")
     Message("user", "571505714")
   }
@@ -199,7 +259,13 @@ class PioPioServlet extends ScalatraServlet with JacksonJsonSupport {
   /**
    * Local followings tweets
    */
-  get("/:handle/reading_list") {
+  val readin_list =
+    (apiOperation[List[UserC]]("getFollowers")
+      summary "Show all followers of an user"
+      notes "Shows all the follower of an user. "
+      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+
+  get("/:handle/reading_list",operation(readin_list)) {
     contentType = formats("json")
     try {
       val handle = params("handle")
@@ -259,5 +325,6 @@ object UserData{
   private case class Message(greeting: String, to: String)
 
   private case class Error(technical: String, client: String)
+
 
 }
