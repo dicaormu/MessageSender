@@ -143,10 +143,10 @@ with JacksonJsonSupport with SwaggerSupport{
 
   //////////////////////////
   val getUsers =
-    (apiOperation[List[UserC]]("getFollowers")
-      summary "Show all followers of an user"
-      notes "Shows all the follower of an user. "
-      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+    (apiOperation[List[UserC]]("getUsers")
+      summary "Show a list of all available users"
+      notes "Shows a list of all available users  that the user in {handle} may add as an following. "
+      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his available users"))
 
   get("/:handle/users",operation(getUsers)) {
     contentType = formats("json")
@@ -172,10 +172,10 @@ with JacksonJsonSupport with SwaggerSupport{
 
 
   val getFollowings =
-    (apiOperation[List[UserC]]("getFollowers")
-      summary "Show all followers of an user"
-      notes "Shows all the follower of an user. "
-      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+    (apiOperation[List[UserC]]("getFollowings")
+      summary "Show all followings of an user"
+      notes "Shows all the followings of an user. "
+      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followings"))
 
   get("/:handle/followings",operation(getFollowings)) {
     contentType = formats("json")
@@ -198,10 +198,11 @@ with JacksonJsonSupport with SwaggerSupport{
    * Follow someone
    */
   val follow =
-    (apiOperation[List[UserC]]("getFollowers")
-      summary "Show all followers of an user"
-      notes "Shows all the follower of an user. "
-      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+    (apiOperation[List[UserC]]("follow")
+      summary "Follow someone"
+      notes "allos an user to follow someone "
+      parameter queryParam[Option[String]]("handle").description("A handle of the user who wants to follow someone")
+      parameter bodyParam[Option[String]]("follow").description("A handle of the user to follow as a json message"))
 
   post("/:handle/followings",operation(follow)) {
     contentType = formats("json")
@@ -223,10 +224,12 @@ with JacksonJsonSupport with SwaggerSupport{
    * Stop following someone
    */
   val stopFollowing =
-    (apiOperation[List[UserC]]("getFollowers")
-      summary "Show all followers of an user"
-      notes "Shows all the follower of an user. "
-      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+    (apiOperation[List[UserC]]("stopFollowing")
+      summary "Stop following someone"
+      notes "stop following someone. "
+      parameter queryParam[Option[String]]("handleFrom").description("A handle of the user owner of the account")
+      parameter queryParam[Option[String]]("handleTo").description("Handle of the user a delete")
+      )
 
   delete("/:handleFrom/followings/:handleTo",operation(stopFollowing)) {
     contentType = formats("json")
@@ -246,10 +249,10 @@ with JacksonJsonSupport with SwaggerSupport{
    * Signin user
    */
   val signin =
-    (apiOperation[List[UserC]]("getFollowers")
-      summary "Show all followers of an user"
-      notes "Shows all the follower of an user. "
-      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+    (apiOperation[List[UserC]]("sign-in")
+      summary "Signin user"
+      notes "Authentication of the user. "
+      parameter bodyParam[Option[String]]("user").description("A handle of the user to autenticate"))
 
   post("/sessions",operation(signin)) {
     contentType = formats("json")
@@ -260,10 +263,10 @@ with JacksonJsonSupport with SwaggerSupport{
    * Local followings tweets
    */
   val readin_list =
-    (apiOperation[List[UserC]]("getFollowers")
-      summary "Show all followers of an user"
+    (apiOperation[List[UserC]]("readin_list")
+      summary "Local following tweets"
       notes "Shows all the follower of an user. "
-      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his followers"))
+      parameter queryParam[Option[String]]("handle").description("A handle of the user to search for his tweets"))
 
   get("/:handle/reading_list",operation(readin_list)) {
     contentType = formats("json")
