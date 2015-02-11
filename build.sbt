@@ -19,13 +19,17 @@ libraryDependencies += "eu.fakod" %% "neo4j-scala" % "0.3.0"
 
 libraryDependencies += "org.scalatra" %% "scalatra-json" % "2.3.0"
 
-libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.2.10" excludeAll(
+libraryDependencies += "org.json4s" %% "json4s-jackson" % "3.2.9" excludeAll(
   ExclusionRule(organization = "org.apache.commons")
   )
+
+libraryDependencies += "org.json4s" %% "json4s-native" % "3.2.9"
 
 libraryDependencies += "org.eclipse.jetty" % "jetty-webapp" % "8.1.7.v20120910" % "container,compile"
 
 libraryDependencies += "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201112011016" % "container,compile" artifacts Artifact("javax.servlet", "jar", "jar")
+
+libraryDependencies += "org.scalatra" %% "scalatra-swagger"  % "2.3.0"
 
 assemblyMergeStrategy in assembly := {
  case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
