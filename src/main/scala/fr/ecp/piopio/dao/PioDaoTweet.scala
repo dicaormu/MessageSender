@@ -39,9 +39,9 @@ case class PioPio(date: Date, pio: String) extends PioPioBase
 case class UserC(id: Int, user: String, image: String) extends UserBase
 
 object Resources {
-  //val BASE_URL = "http://172.31.38.63:7474/db/data/"
+  val BASE_URL = "http://172.31.38.63:7474/db/data/"
   //val BASE_URL = "http://192.168.56.101:7474/db/data/"
-  val BASE_URL = "http://54.191.122.62:7474/db/data/"
+  //val BASE_URL = "http://54.191.122.62:7474/db/data/"
 }
 
 class PioDaoTweet(handle: Int, pio: String) extends Neo4jWrapper with RestGraphDatabaseServiceProvider with TypedTraverser with Neo4jWrapperImplicits {
