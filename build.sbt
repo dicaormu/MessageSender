@@ -31,6 +31,8 @@ libraryDependencies += "org.eclipse.jetty.orbit" % "javax.servlet" % "3.0.0.v201
 
 libraryDependencies += "org.scalatra" %% "scalatra-swagger"  % "2.3.0"
 
+libraryDependencies += "com.typesafe" % "config" % "1.2.1"
+
 assemblyMergeStrategy in assembly := {
  case PathList("javax", "servlet", xs @ _*)         => MergeStrategy.first
   case PathList(ps @ _*) if ps.last endsWith ".html" => MergeStrategy.first
