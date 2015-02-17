@@ -1,15 +1,33 @@
-*.class
-*.cache
+# Eclipse
+.classpath
+.project
+.settings/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# Intellij
+.idea/
+*.iml
+*.iws
 
-# Package Files #
-*.jar
-*.war
-*.ear
+## Directory-based project format:
+.idea/
 
-project/target/*
-target/*
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
+## File-based project format:
+*.ipr
+*.iws
+
+## Plugin-specific files:
+
+# IntelliJ
+out/
+project/target/
+project/project/target/
+
+# mpeltonen/sbt-idea plugin
+.idea_modules/
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
